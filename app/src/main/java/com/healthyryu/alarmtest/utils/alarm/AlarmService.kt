@@ -29,19 +29,29 @@ class AlarmService : Service() {
         val alarmContent = intent.getStringExtra(CONTENT)
 
         val notificationIntent = Intent(this, RingActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(alarmTitle)
-            .setContentText(alarmContent)
-            .setSmallIcon(R.drawable.folder)
-            .setContentIntent(pendingIntent)
-            .build()
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT // 페이지를 하나만 유지
+        )
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID).apply {
+            setContentTitle(alarmTitle)
+            setContentText(alarmContent)
+            setSmallIcon(R.drawable.folder)
+            priority = NotificationCompat.PRIORITY_HIGH
+            setContentIntent(pendingIntent)
+            setFullScreenIntent(pendingIntent, true)
+        }
 
+
+        // Vibrator 동작
         val vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator
-        val pattern = longArrayOf(0, 100, 1000)
-        vibrator?.vibrate(pattern, 0)
+        val vibratePattern = longArrayOf(100, 100, 1000)
+        vibrator?.vibrate(vibratePattern, 0)
 
-        startForeground(1, notification)
+        val build = notification.build()
+        startForeground(1, build)
         return START_STICKY
     }
 

@@ -16,6 +16,7 @@ class RingActivity : AppCompatActivity() {
 
         with(binding) {
             btnDismiss.setOnClickListener {
+                // 알람 해제
                 val intentService = Intent(applicationContext, AlarmService::class.java)
                 applicationContext.stopService(intentService)
                 finish()

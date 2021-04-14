@@ -28,7 +28,7 @@ class AlarmHandler constructor(
 
             if (isChecked) {
                 val triggerTime = (SystemClock.elapsedRealtime() + 5 * 1000)
-                it.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
+                it.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
             } else {
                 it.cancel(pendingIntent)
             }
