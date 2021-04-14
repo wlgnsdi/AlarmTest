@@ -17,19 +17,21 @@ class AlarmHandler constructor(
     }
 
     fun setAlarm(isChecked: Boolean) {
-        val alarmIntent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            NotificationHandler.NOTIFICATION_ID,
-            alarmIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        alarmManager?.let {
+            val alarmIntent = Intent(context, AlarmReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                NotificationHandler.NOTIFICATION_ID,
+                alarmIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
-        if (isChecked) {
-            val triggerTime = (SystemClock.elapsedRealtime() + 5 * 1000)
-            alarmManager?.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
-        } else {
-            alarmManager?.cancel(pendingIntent)
+            if (isChecked) {
+                val triggerTime = (SystemClock.elapsedRealtime() + 5 * 1000)
+                it.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
+            } else {
+                it.cancel(pendingIntent)
+            }
         }
     }
 

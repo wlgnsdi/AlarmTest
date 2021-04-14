@@ -25,14 +25,16 @@ class NotificationHandler constructor(
     }
 
     private fun create() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
+        notificationManager?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val serviceChannel = NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
 
-            notificationManager?.createNotificationChannel(serviceChannel)
+                it.createNotificationChannel(serviceChannel)
+            }
         }
     }
 }
