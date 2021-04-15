@@ -3,7 +3,9 @@ package com.healthyryu.alarmtest.utils.alarm
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
+import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import com.healthyryu.alarmtest.R
@@ -44,11 +46,17 @@ class AlarmService : Service() {
             setFullScreenIntent(pendingIntent, true)
         }
 
-
         // Vibrator 동작
         val vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator
-        val vibratePattern = longArrayOf(100, 100, 1000)
-        vibrator?.vibrate(vibratePattern, 0)
+        vibrator?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                it.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE))
+                it.vibrate(VibrationEffect.createWaveform(longArrayOf(100, 200), 2))
+            } else {
+                val vibratePattern = longArrayOf(0, 1000, 100, 5000, 1000)
+                it.vibrate(vibratePattern, -1)
+            }
+        }
 
         val build = notification.build()
         startForeground(1, build)
